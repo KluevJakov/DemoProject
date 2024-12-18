@@ -3,10 +3,14 @@ package ru.jafix.studying.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.jafix.studying.entities.Book;
+import ru.jafix.studying.entities.Category;
+import ru.jafix.studying.repositories.AuthorRepository;
 import ru.jafix.studying.repositories.BookRepository;
+import ru.jafix.studying.repositories.CategoryRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +21,10 @@ public class BookService {
 
     @Autowired
     protected BookRepository bookRepository;
+    @Autowired
+    protected CategoryRepository categoryRepository;
+    @Autowired
+    protected AuthorRepository authorRepository;
 
     public Book getBookById(UUID id) {
         Optional<Book> book = bookRepository.findById(id);
@@ -32,7 +40,17 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    @Transactional
     public Book addBook(Book book) {
+        if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+
+        }
+
+        if (book.getCategory() != null && book.getCategory().getId() == null) {
+            Category savedCategory = categoryRepository.save(book.getCategory());
+            book.setCategory(savedCategory);
+        }
+
         return bookRepository.save(book);
     }
 
