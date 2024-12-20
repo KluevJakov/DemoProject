@@ -1,0 +1,1 @@
+ALTER TABLE book RENAME COLUMN "publish_year" TO pub_year;
